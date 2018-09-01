@@ -1,10 +1,13 @@
 package com.bingo.spider.service.impl;
 
 import com.bingo.spider.entity.PageEntity;
+import com.bingo.spider.repository.PageRepository;
 import com.bingo.spider.service.ParseService;
 import com.bingo.spider.util.HtmlUtil;
+import com.bingo.spider.util.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -47,9 +50,9 @@ public class YoukuParseServiceImpl implements ParseService {
         String totalPlayNumber = HtmlUtil.getField(document, totalPlayNumberCssQuery, totalPlayNumberRegex);
         String commentNumber = HtmlUtil.getField(document, commentNumberCssQuery, commentNumberRegex);
         String likeNumber = HtmlUtil.getField(document, likeNumberCssQuery, likeNumberRegex);
-        pageEntity.setTotalPlayNumber(totalPlayNumber);
-        pageEntity.setCommentNumber(commentNumber);
-        pageEntity.setLikeNumber(likeNumber);
+        pageEntity.setTotalPlayNumber(RegexUtil.removeComma(totalPlayNumber));
+        pageEntity.setCommentNumber(RegexUtil.removeComma(commentNumber));
+        pageEntity.setLikeNumber(RegexUtil.removeComma(likeNumber));
 
     }
 }

@@ -10,11 +10,15 @@ import java.util.regex.Pattern;
  * @since 2018/9/1
  */
 
-class RegexUtil {
+public class RegexUtil {
 
     static String getPageInfo(String content, Pattern pattern, int groupNo) {
         Matcher matcher = pattern.matcher(content);
         return matcher.find() ? matcher.group(groupNo).trim() : "0";
+    }
+
+    public static long removeComma(String content) {
+        return Long.parseLong(content.replaceAll(",", ""));
     }
 
 }
