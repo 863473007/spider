@@ -10,5 +10,11 @@ import com.bingo.spider.entity.PageEntity;
  */
 
 public interface DownloadService {
+    /**
+     * 通过url下载页面html
+     *
+     * @param url 链接
+     * @return 页面实体
+     */
     PageEntity download(String url);
 }
