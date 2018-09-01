@@ -44,17 +44,12 @@ public class YoukuParseServiceImpl implements ParseService {
     public void parse(PageEntity pageEntity) {
         Document document = Jsoup.parse(pageEntity.getContent());
 
-        // 获取总播放数
         String totalPlayNumber = HtmlUtil.getField(document, totalPlayNumberCssQuery, totalPlayNumberRegex);
-        System.out.println("总播放数：" + totalPlayNumber);
-
-        // 获取评论数
         String commentNumber = HtmlUtil.getField(document, commentNumberCssQuery, commentNumberRegex);
-        System.out.println("评论：" + commentNumber);
-
-        // 获取点赞数
         String likeNumber = HtmlUtil.getField(document, likeNumberCssQuery, likeNumberRegex);
-        System.out.println("点赞数：" + likeNumber);
+        pageEntity.setTotalPlayNumber(totalPlayNumber);
+        pageEntity.setCommentNumber(commentNumber);
+        pageEntity.setLikeNumber(likeNumber);
 
     }
 }
