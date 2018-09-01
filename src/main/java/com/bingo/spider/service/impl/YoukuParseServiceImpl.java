@@ -2,14 +2,14 @@ package com.bingo.spider.service.impl;
 
 import com.bingo.spider.entity.PageEntity;
 import com.bingo.spider.service.ParseService;
+import com.bingo.spider.util.HtmlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * 优酷页面解析 service impl
@@ -19,30 +19,42 @@ import java.util.regex.Pattern;
  */
 
 @Service
+@PropertySource(value = "classpath:config/youku.properties", encoding = "UTF-8")
 public class YoukuParseServiceImpl implements ParseService {
 
-    private String totalPlayNumberRegex = "(?<=总播放数：)[\\d,]+";
+    @Value("${totalPlayNumberCssQuery}")
+    private String totalPlayNumberCssQuery;
 
+    @Value("${commentNumberCssQuery}")
+    private String commentNumberCssQuery;
+
+    @Value("${likeNumberCssQuery}")
+    private String likeNumberCssQuery;
+
+    @Value("${totalPlayNumberRegex}")
+    private String totalPlayNumberRegex;
+
+    @Value("${commentNumberRegex}")
+    private String commentNumberRegex;
+
+    @Value("${likeNumberRegex}")
+    private String likeNumberRegex;
 
     @Override
     public void parse(PageEntity pageEntity) {
         Document document = Jsoup.parse(pageEntity.getContent());
 
         // 获取总播放数
-        Elements elements = document.select("body > div.s-body > div > div.mod.mod-new > div.mod.fix > div.p-base > ul > li:nth-child(11)");
-        if (elements == null || elements.size() == 0) {
-            return;
-        }
-        Element total = elements.get(0);
-        Pattern pattern = Pattern.compile(totalPlayNumberRegex, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(total.text());
-        if (matcher.find()) {
-            System.out.println("总播放数：" + matcher.group(0));
-        }
+        String totalPlayNumber = HtmlUtil.getField(document, totalPlayNumberCssQuery, totalPlayNumberRegex);
+        System.out.println("总播放数：" + totalPlayNumber);
 
         // 获取评论数
-        // body > div.s-body > div > div.mod.mod-new > div.mod.fix > div.p-base > ul > li:nth-child(12)
+        String commentNumber = HtmlUtil.getField(document, commentNumberCssQuery, commentNumberRegex);
+        System.out.println("评论：" + commentNumber);
 
+        // 获取点赞数
+        String likeNumber = HtmlUtil.getField(document, likeNumberCssQuery, likeNumberRegex);
+        System.out.println("点赞数：" + likeNumber);
 
     }
 }
